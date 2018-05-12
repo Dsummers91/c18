@@ -11,5 +11,7 @@ install:
 - npm install
 
 script: 
+- cd blockchain
 - ganache-cli >/dev/null 2>&1 &
+- truffle migrate --reset
 - truffle test 
