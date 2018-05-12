@@ -1,5 +1,5 @@
-var ERC721BasicToken = artifacts.require("./ERC721BasicToken.sol");
+var FoodChainz = artifacts.require("./FoodChainz.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(ERC721BasicToken);
+  deployer.deploy(FoodChainz);
 };
