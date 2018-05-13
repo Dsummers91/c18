@@ -10,7 +10,8 @@ contract FoodChainz is ERC721BasicToken() {
     Uninitiated,
     Created,
     Confirmed,
-    Completed
+    Completed,
+    Rejected
   }
 
   event ShipmentCreated(uint256 token, address owner);
