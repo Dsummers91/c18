@@ -7,6 +7,14 @@ const contract = require("truffle-contract");
 const bodyParser = require('body-parser')
 const FoodChainz = contract(require('./blockchain/build/contracts/FoodChainz.json'))
 const tokens = require('./tokens.js');
+const MessagingResponse =
+require('dotenv').config()
+
+const accountSid =  process.env.accountSid;
+const authToken = process.env.authToken;
+if (process.env.accountSid) {
+	const client = require('twilio')(accountSid, authToken);
+}
 
 FoodChainz.setProvider(provider);
 let foodChainz;
@@ -30,6 +38,16 @@ app.get('/create', async (req, res) => {
   tokensToQuery = tokenArray;
   return foodChainz.contract.createShipment(tokenArray, web3.eth.coinbase, {from: web3.eth.coinbase, gas: 5000000}, (err, resp) => {
     res.send({ tx: resp });
+			if (process.env.accountSid) {
+				client.messages
+      		.create({
+        		body: `Package has been shipped please confirm when package is at destination!`,
+         		from: process.env.from,
+         		mediaUrl: process.env.media.url,
+         		to: process.env.to
+       		})
+      		.then(message => console.log(message.sid))
+		}
   });
 });
 
@@ -73,7 +91,18 @@ server = app.listen(process.env.PORT || 8080, async() => {
 	foodChainz = await FoodChainz.deployed();
 	console.log('listening on port: ', process.env.PORT || 8080);
 })
-
+app.post('/sms', (req, res) => {
+ 
+  // Start our TwiML response.
+  const twiml = new MessagingResponse();
+ 
+  // Add a text message.
+  const msg = twiml.message('Shipment Confirmed');
+  foodChainz.contract.confirmShipment(tokensToQuery, {from: web3.eth.coinbase, gas: 5000000}, (err, resp) => {
+  	res.writeHead(200, {'Content-Type': 'text/xml'});
+  	res.end(twiml.toString());
+	});
+});
 
 function getStatus(id) {
   let statuses =  [
