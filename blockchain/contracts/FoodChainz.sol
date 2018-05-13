@@ -46,5 +46,12 @@ contract FoodChainz is ERC721BasicToken() {
       if(_tokens[i] == uint256(0)) { break; }
       status[_tokens[i]] = Status.Completed;
     } 
+  
+  }
+  function rejectShipment(uint256[5] _tokens) public {
+    for(uint256 i=0; i<_tokens.length; i++) {
+      if(_tokens[i] == uint256(0)) { break; }
+      status[_tokens[i]] = Status.Rejected;
+    } 
   }
 }
