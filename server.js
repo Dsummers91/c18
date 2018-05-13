@@ -50,7 +50,8 @@ app.get('/tokens/current', async(req, res) => {
   result = [];
   for(var i=0; i < tokensToQuery.length; i++) {
   	result.push({
-			statuses: getStatus(+(await foodChainz.statusOf(tokensToQuery[i]))),
+			tokenId: tokensToQuery[i],
+			status: getStatus(+(await foodChainz.statusOf(tokensToQuery[i]))),
 			metadata: tokens(tokensToQuery[i])
   	})
 	}
