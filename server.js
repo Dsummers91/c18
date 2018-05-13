@@ -48,7 +48,7 @@ app.get('/complete', (req, res) => {
 
 app.post('/reject', (req, res) => {
   console.log(req.body.tokens);
-  return foodChainz.contract.rejectShipment([11, 12], {from: web3.eth.coinbase, gas: 5000000}, (err, resp) => {
+  return foodChainz.contract.rejectShipment(req.body.tokens, {from: web3.eth.coinbase, gas: 5000000}, (err, resp) => {
     res.send({ tx: resp });
   });
 });
